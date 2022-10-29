@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <!-- <link href="styles/style.css" rel="stylesheet" type="text/css"> -->
+    <script src="scripts/WebAudioFontPlayer.js"></script>
+    <script src="scripts/MIDIFile.js"></script>
+    <script src="scripts/play_midi.js"></script>
+
+  </head>
+  <body>
+    <h1>This is a test</h1>
+
+    <p>We can have some text</p>
+
+    <script>
+        load_midi_file('midi/liebstrm.mid');
+    </script>
+
+    <button onclick="start_player();">Play</button>
+
+
+    <div id="osmdContainer"/>
+    <script src="scripts/opensheetmusicdisplay.min.js"></script>
+    <script>
+      var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
+      osmd.setOptions({
+        backend: "svg",
+        drawTitle: false,
+        drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
+      });
+      osmd
+        .load("midi/liebstrm.mxl")
+        .then(
+          function() {
+            osmd.render();
+          }
+        );
+    </script>
+
+
+  </body>
+</html>
