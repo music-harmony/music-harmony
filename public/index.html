@@ -2,29 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Test</title>
-    <!-- <link href="styles/style.css" rel="stylesheet" type="text/css"> -->
+    <title>Digital education demo</title>
+    <link href="styles/style.css" rel="stylesheet" type="text/css">
+
     <script src="scripts/WebAudioFontPlayer.js"></script>
     <script src="scripts/MIDIFile.js"></script>
     <script src="scripts/play_midi.js"></script>
 
   </head>
   <body>
-    <h1>This is a test</h1>
+    <h1>Music in the browser: demo</h1>
 
-    <p>We can have some text</p>
+    <p>We can display music notation and play it in the browser !</p>
 
     <script>
         load_midi_file('midi/liebstrm.mid');
     </script>
 
-    <button onclick="start_player();">Play</button>
+    <div class="buttonpanel">
+        <button onclick="start_player();">Play</button>
+    </div>
 
 
-    <div id="osmdContainer"/>
+    <div id="mainsheet" class="musicsheet"/>
     <script src="scripts/opensheetmusicdisplay.min.js"></script>
     <script>
-      var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
+      var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("mainsheet");
       osmd.setOptions({
         backend: "svg",
         drawTitle: false,
