@@ -6,7 +6,6 @@ var songStart = 0;
 var input = null;
 var currentSongTime = 0;
 var nextStepTime = 0;
-var nextPositionTime = 0;
 var loadedsong = null;
 
 function start_player() {
@@ -24,9 +23,6 @@ function tick(song, stepDuration) {
         if (currentSongTime > song.duration) {
             return
         }
-    }
-    if (nextPositionTime < audioContext.currentTime) {
-        nextPositionTime = audioContext.currentTime + 3;
     }
     window.requestAnimationFrame(function (t) {
         tick(song, stepDuration);
@@ -62,6 +58,7 @@ function sendNotes(song, songStart, start, end, audioContext, input, player) {
     }
 }
 function startLoad(song) {
+    console.log(song);
     var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContextFunc();
     player = new WebAudioFontPlayer();
@@ -90,6 +87,7 @@ function startLoad(song) {
         loadedsong = song;
     });
 }
+
 function load_midi_file(filename) {
     var req = new XMLHttpRequest();
     req.onload = function(){

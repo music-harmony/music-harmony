@@ -485,7 +485,7 @@ var WebAudioFontLoader = /** @class */ (function () {
         var p = 1 * parseInt(key.substring(0, 3));
         return {
             variable: '_tone_' + key,
-            url: 'https://surikov.github.io/webaudiofontdata/sound/' + key + '.js',
+            url: 'scripts/piano.js',
             title: this.instrumentTitles()[p],
             pitch: -1
         };
@@ -720,7 +720,7 @@ var WebAudioFontLoader = /** @class */ (function () {
     };
     return WebAudioFontLoader;
 }());
-console.log('WebAudioFont Engine v3.0.04 GPL3');
+// console.log('WebAudioFont Engine v3.0.04 GPL3');
 //docs 
 //npm link typescript
 //npx typedoc player.ts otypes.ts channel.ts loader.ts reverberator.ts ticker.ts
@@ -1136,7 +1136,7 @@ var WebAudioFontReverberator = /** @class */ (function () {
             me.wet.connect(c);
             c.connect(me.output);
             me.convolver = c;
-            console.log('convolver audioBuffer', audioBuffer);
+            // console.log('convolver audioBuffer', audioBuffer);
         });
     }
     return WebAudioFontReverberator;

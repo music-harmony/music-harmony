@@ -11,7 +11,7 @@
 
     <script src="scripts/opensheetmusicdisplay.min.js"></script>
 
-    <script src="scripts/drag_and_drop.js"></script>
+    <script src="scripts/main.js"></script>
 
   </head>
   <body>
@@ -28,27 +28,9 @@
     </div>
 
 
-    <div>
-        <div id="mainsheet" class="musicsheet"/>
-        <script>
-          var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("mainsheet");
-          osmd.setOptions({
-            backend: "svg",
-            drawTitle: false,
-            drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
-          });
-          osmd
-            .load("midi/simple.mxl")
-            .then(
-              function() {
-                osmd.render();
-              }
-            );
-        </script>
+    <div id="mainsheet">
     </div>
 
-    <div id="chordsheet">
-    </div>
 
     <div id="droparea">
     </div>
@@ -60,6 +42,8 @@
     </div>
 
     <script>
+        load_melody_file("midi/simple_melody.musicxml")
+
         make_drop_element("0");
         make_drop_element("1");
         make_drop_element("2");
@@ -73,7 +57,6 @@
         make_draggable_chord(5, "A", ["A4", "C5", "E5"]);
         make_draggable_chord(6, "B", ["B4", "D5", "F5"]);
 
-        update_chord_line();
     </script>
 
   </body>
