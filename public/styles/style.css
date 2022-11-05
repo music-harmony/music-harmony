@@ -30,8 +30,26 @@ body {
     text-align: center;
 }
 
-.musicsheet {
-  padding: 0 1em;
+#mainsheet {
+  padding: 2em 1em;
+}
+
+.draggablechord {
+    padding: 2em 1em;
+    display: inline-block;
+    width: 100px;
+}
+
+#droparea {
+    background-color: #101030;
+}
+
+.chorddrop {
+    height: 100px;
+    width: 100px;
+    display: inline-block;
+    background-color: #202070;
+    margin: 0.5em;
 }
 
 button {
