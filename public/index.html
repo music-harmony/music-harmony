@@ -20,7 +20,7 @@
     <p>We can display music notation and play it in the browser !</p>
 
     <script>
-        load_midi_file('midi/simple.mid');
+        load_midi_file('midi/basic2.mid');
     </script>
 
     <div class="buttonpanel">
@@ -42,20 +42,20 @@
     </div>
 
     <script>
-        load_melody_file("midi/simple_melody.musicxml")
+        load_melody_file("midi/basic2.musicxml")
 
         make_drop_element("0");
         make_drop_element("1");
         make_drop_element("2");
         make_drop_element("3");
 
-        make_draggable_chord(0, "C", ["C4", "E4", "G4"]);
-        make_draggable_chord(1, "D", ["D4", "F4", "A4"]);
-        make_draggable_chord(2, "E", ["E4", "G4", "B4"]);
-        make_draggable_chord(3, "F", ["F4", "A4", "C5"]);
-        make_draggable_chord(4, "G", ["G4", "B4", "D5"]);
-        make_draggable_chord(5, "A", ["A4", "C5", "E5"]);
-        make_draggable_chord(6, "B", ["B4", "D5", "F5"]);
+        make_draggable_chord(0, "C", ["C3", "E3", "G3"]);
+        make_draggable_chord(1, "D", ["D3", "F3", "A3"]);
+        make_draggable_chord(2, "E", ["E3", "G3", "B3"]);
+        make_draggable_chord(3, "F", ["F3", "A3", "C4"]);
+        make_draggable_chord(4, "G", ["G3", "B3", "D4"]);
+        make_draggable_chord(5, "A", ["A3", "C4", "E4"]);
+        make_draggable_chord(6, "B", ["B3", "D4", "F4"]);
 
     </script>
 

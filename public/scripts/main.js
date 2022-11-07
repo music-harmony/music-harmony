@@ -1,5 +1,5 @@
 
-var selectedChords = [null, null, null, null];
+var selectedChords = [0, 0, 0, 0];
 var chordsDatabase = [];
 var loadedMelody = null;
 
@@ -15,36 +15,32 @@ function load_melody_file(filename) {
 }
 
 function dragstart_handler(ev) {
- // Change the source element's background color to signify drag has started
- // ev.currentTarget.style.background = "lightblue";
- // Add the id of the drag source element to the drag data payload so
- // it is available when the drop event is fired
+ ev.currentTarget.style.background = "lightblue";
  ev.dataTransfer.setData("chord_index", ev.target.id);
- // Tell the browser both copy and move are possible
  ev.effectAllowed = "copyMove";
 }
+function dragenter_handler(ev) {
+  ev.target.style.background = "lightblue";
+  ev.preventDefault();
+}
+function dragleave_handler(ev) {
+  ev.target.style.background = "#202070";
+  ev.preventDefault();
+}
 function dragover_handler(ev) {
- // Change the target element's border to signify a drag over event
- // has occurred
- ev.currentTarget.style.background = "lightblue";
  ev.preventDefault();
 }
 function drop_handler(ev) {
   ev.preventDefault();
-  // Get the id of drag source element (that was added to the drag data
-  // payload by the dragstart event handler)
   ev.target.style.background = "#202070";
   var chord_index = ev.dataTransfer.getData("chord_index");
-  var chord = chordsDatabase[chord_index];
   var index = ev.target.id;
-  selectedChords[index] = chord;
+  selectedChords[index] = chord_index;
   update_chord_line();
 }
 
 function dragend_handler(ev) {
-  // Restore source's border
-  // ev.target.style.background = "white";
-  // Remove all of the drag data
+  ev.currentTarget.style.background = "white";
   ev.dataTransfer.clearData();
 }
 
@@ -57,7 +53,8 @@ function update_chord_line() {
       drawTitle: false,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    xmlcode = make_musicxml_chord_line(selectedChords);
+    chords = selectedChords.map(function(chord_index){return chordsDatabase[chord_index]});
+    xmlcode = make_musicxml_chord_line(chords);
     doc = make_musicxml_doc([loadedMelody, xmlcode]);
     osmd.load(doc).then(
         function() {
@@ -93,9 +90,6 @@ function make_draggable_chord(index, chordName, chordData) {
         }
     );
     chord_div.appendChild(osmdiv);
-    // var par = document.createElement("p");
-    // par.innerHTML = chord;
-    // chord_div.appendChild(par);
     document.getElementById("draggarea").appendChild(chord_div);
 }
 
@@ -105,6 +99,8 @@ function make_drop_element(index) {
     drop_div.className = "chorddrop";
     drop_div.addEventListener("drop", drop_handler);
     drop_div.addEventListener("dragover", dragover_handler);
+    drop_div.addEventListener("dragenter", dragenter_handler);
+    drop_div.addEventListener("dragleave", dragleave_handler);
     document.getElementById("droparea").appendChild(drop_div);
 }
 
@@ -142,7 +138,7 @@ function make_measure_attributes(){
     div = tagwrap("divisions", 1);
     key = tagwrap("key", tagwrap("fifths", "0"));
     time = tagwrap("time", tagwrap("beats", "4")+tagwrap("beat-type", "4"));
-    clef = tagwrap("clef", tagwrap("sign", "G")+tagwrap("line", "2"));
+    clef = tagwrap("clef", tagwrap("sign", "F")+tagwrap("line", "4"));
     return tagwrap("attributes", div+key+time+clef);
 }
 
