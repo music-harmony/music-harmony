@@ -138,7 +138,7 @@ function make_measure_attributes(){
     div = tagwrap("divisions", 1);
     key = tagwrap("key", tagwrap("fifths", "0"));
     time = tagwrap("time", tagwrap("beats", "4")+tagwrap("beat-type", "4"));
-    clef = tagwrap("clef", tagwrap("sign", "F")+tagwrap("line", "4"));
+    clef = tagwrap("clef", tagwrap("sign", "G")+tagwrap("line", "2"));
     return tagwrap("attributes", div+key+time+clef);
 }
 
