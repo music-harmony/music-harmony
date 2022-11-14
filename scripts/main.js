@@ -2,30 +2,39 @@
 var selectedChords = [0, 0, 0, 0];
 var chordsDatabase = [
     ["C4", "E4", "G4"],
-    ["G3", "B3", "D4"],
+    ["G4", "B4", "D5"],
     ["D4", "F4#", "A4"],
-    ["A3", "C4#", "E4"],
+    ["A4", "C5#", "E5"],
     ["E4", "G4#", "B4"],
-    ["B3", "D4#", "F4#"],
-    ["F3#", "A3#", "C4#"],
+    ["B4", "D5#", "F5#"],
+    ["F4#", "A4#", "C5#"],
     ["D4b", "F4", "A4b"],
-    ["A3b", "C4", "E4b"],
+    ["A4b", "C5", "E5b"],
     ["E4b", "G4", "B4b"],
-    ["B3b", "D4", "F4"],
+    ["B4b", "D5", "F5"],
     ["F4", "A4", "C5"],
 // minor half
-    ["a3", "c4", "e4"],
-    ["e4", "g4", "b4"],
-    ["b3", "d4", "f4#"],
-    ["f3#", "a3", "c4#"],
-    ["c4#", "e4", "g4#"],
-    ["g3#", "b3", "d4#"],
-    ["d4#", "f4#", "a4#"],
-    ["b3b", "d4b", "f4"],
-    ["f4", "a4b", "c5"],
-    ["c4", "e4b", "g4"],
-    ["g3", "b3b", "d4"],
-    ["d4", "f4", "a4"],
+    ["A4", "C5", "E5"],
+    ["E4", "G4", "B4"],
+    ["B4", "D5", "F5#"],
+    ["F4#", "A4", "C5#"],
+    ["C5#", "E5", "G5#"],
+    ["G4#", "B4", "D5#"],
+    ["D4#", "F4#", "A4#"],
+    ["B4b", "D5b", "F5"],
+    ["F5", "A5b", "C6"],
+    ["C5", "E5b", "G5"],
+    ["G4", "B4b", "D5"],
+    ["D4", "F4", "A4"],
+];
+
+var tonalityFifths = [
+    0, 1, 2, 3, 4, 5, 6, -5, -4, -3, -2, -1,
+    0, 1, 2, 3, 4, 5, 6, -5, -4, -3, -2, -1,
+];
+
+var tonalityDisplayWidth = [
+    55, 60, 65, 70, 75, 80, 85, 80, 75, 70, 65, 60,
 ];
 
 var chordsNames = [
@@ -35,21 +44,21 @@ var chordsNames = [
     "A",
     "E",
     "B",
-    "F#",
-    "Db",
-    "Ab",
-    "Eb",
-    "Bb",
+    "F♯",
+    "D♭",
+    "A♭",
+    "E♭",
+    "B♭",
     "F",
 // minor half
     "a",
     "e",
     "b",
-    "f#",
-    "c#",
-    "g#",
-    "d#",
-    "bb",
+    "f♯",
+    "c♯",
+    "g♯",
+    "d♯",
+    "b♭",
     "f",
     "c",
     "g",
@@ -70,7 +79,7 @@ function load_melody_file(filename) {
 }
 
 function dragstart_handler(ev) {
- ev.currentTarget.style.background = "lightblue";
+ // ev.currentTarget.style.background = "lightblue";
  ev.dataTransfer.setData("chord_index", ev.target.id);
  ev.effectAllowed = "copyMove";
 }
@@ -95,7 +104,7 @@ function drop_handler(ev) {
 }
 
 function dragend_handler(ev) {
-  ev.currentTarget.style.background = "white";
+  // ev.currentTarget.style.background = "white";
   ev.dataTransfer.clearData();
 }
 
@@ -109,8 +118,9 @@ function update_chord_line() {
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
     chords = selectedChords.map(function(chord_index){return chordsDatabase[chord_index]});
-    xmlcode = make_musicxml_chord_line(chords);
-    doc = make_musicxml_doc([loadedMelody, xmlcode]);
+    xmlcode = make_musicxml_chord_line(chords, 0);
+    console.log(xmlcode);
+    doc = make_musicxml_doc([loadedMelody, xmlcode], 0);
     osmd.load(doc).then(
         function() {
           osmd.render();
@@ -204,19 +214,20 @@ function make_key_display(index, cx, cy, radius, alpha) {
       drawTimeSignatures: false,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    measurexml = make_musicxml_chord_line([["C4", "E4", "G4"]]);
-    var xmlcode = make_musicxml_doc([measurexml]);
+    measurexml = make_musicxml_chord_line([chordsDatabase[index]], tonalityFifths[index]);
+    var xmlcode = make_musicxml_doc([measurexml], 0);
     osmd.load(xmlcode).then(
         function() {
           osmd.render();
         }
     );
     osmdiv.style.position = 'absolute';
-    x = cx + radius/2*Math.cos(alpha) - 50;
+    w = tonalityDisplayWidth[index];
+    x = cx + radius/2*Math.cos(alpha) - w;
     y = cy + radius/2*Math.sin(alpha) - 40;
     osmdiv.style.left = x + 'px';
     osmdiv.style.top = y + 'px';
-    osmdiv.style.width = '100px';
+    osmdiv.style.width = 2*w + 'px';
     osmdiv.style.height = '80px';
     return osmdiv;
 }
@@ -262,15 +273,15 @@ var footer = `
     return header+partlist+xmlparts+footer;
 }
 
-function make_measure_attributes(){
+function make_measure_attributes(fifths){
     div = tagwrap("divisions", 1);
-    key = tagwrap("key", tagwrap("fifths", "0"));
+    key = tagwrap("key", tagwrap("fifths", fifths));
     time = tagwrap("time", tagwrap("beats", "4")+tagwrap("beat-type", "4"));
     clef = tagwrap("clef", tagwrap("sign", "G")+tagwrap("line", "2"));
     return tagwrap("attributes", div+key+time+clef);
 }
 
-function make_musicxml_chord_line(chords) {
+function make_musicxml_chord_line(chords, fifths) {
     var code = "";
     for(let i = 0; i < chords.length; i++){
         chord = chords[i];
@@ -279,7 +290,7 @@ function make_musicxml_chord_line(chords) {
         }
         chordcode = make_musicxml_chord(chord);
         if (i === 0){
-            chordcode = make_measure_attributes() + chordcode;
+            chordcode = make_measure_attributes(fifths) + chordcode;
         }
         code += tagwrapattr('measure number="'+(i+1)+'"', 'measure', chordcode);
     }
@@ -290,17 +301,36 @@ function make_musicxml_chord(notes) {
   var code = ""; 
   for(let i = 0; i < notes.length; i++){
       note = notes[i];
+      console.log(note);
       var step = tagwrap("step", note[0]);
       var octave = tagwrap("octave", note[1]);
-      var pitch = tagwrap("pitch", step+octave);
+      alter = '';
+      if (note.length > 2){
+          if (note[2] == '#'){
+              alter = '1';
+          } else {
+              alter = '-1';
+          }
+          alter = tagwrap("alter", alter);
+      }
+      var pitch = tagwrap("pitch", step+octave+alter);
       var dur = tagwrap("duration", "4");
       var type = tagwrap("type", "whole");
+      var accidental = '';
+      if (note.length > 2){
+          if (note[2] == '#'){
+              acctype = 'sharp';
+          } else {
+              acctype = 'flat';
+          }
+          accidental = tagwrap("accidental", acctype);
+      }
       if (i === 0){
         var chord = ""
       } else {
         var chord = "<chord/>"
       }
-      var res = tagwrap("note", chord+pitch+dur+type);
+      var res = tagwrap("note", chord+pitch+dur+type+accidental);
       code += res;
   }
   return code;
