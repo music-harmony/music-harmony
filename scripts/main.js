@@ -220,7 +220,8 @@ function make_key_display(index, cx, cy, radius, alpha) {
       drawTimeSignatures: false,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    measurexml = make_rest_measure(index, tonalityFifths[index]);
+    fifths = tonalityFifths[index];
+    measurexml = make_musicxml_chord_line([null], fifths);
     var xmlcode = make_musicxml_doc([measurexml], 0);
     osmd.load(xmlcode).then(
         function() {
@@ -288,14 +289,12 @@ function make_measure_attributes(fifths){
 }
 
 
-function make_rest_measure(index, fifths){
+function make_rest_measure(fifths){
     rest = '<rest/>';
     dur = tagwrap('duration', 4);
     type = tagwrap('type', 'whole');
     note = tagwrap('note', rest+dur+type);
-    attrs = make_measure_attributes(fifths);
-    code = tagwrapattr('measure number="'+(index+1)+'"', 'measure', attrs+note);
-    return code;
+    return note;
 }
 
 function make_musicxml_chord_line(chords, fifths) {
@@ -304,12 +303,12 @@ function make_musicxml_chord_line(chords, fifths) {
     for(let i = 0; i < chords.length; i++){
         chord = chords[i];
         if (chord === null){
-            measure = make_rest_measure(i, fifths);
+            measure = make_rest_measure(fifths);
         } else {
             measure = make_musicxml_chord(chord);
-            if (i === 0){
-                measure = make_measure_attributes(fifths) + measure;
-            }
+        }
+        if (i === 0){
+            measure = make_measure_attributes(fifths) + measure;
         }
         code += tagwrapattr('measure number="'+(i+1)+'"', 'measure', measure);
     }
