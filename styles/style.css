@@ -1,12 +1,26 @@
+:root {
+    --drop-color: #bbd2ee;
+    --contrast-grey: #222222;
+    --hover-color: #33bbee;
+    --selected-color: #2299dd;
+}
+
 html {
   font-size: 10px;
   font-family: 'Open Sans', sans-serif;
 }
 
+body {
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 20px 20px 20px;
+}
 
 h1 {
   font-size: 60px;
   text-align: center;
+  margin: 0;
+  padding: 20px 0 0 0;
 }
 
 
@@ -16,82 +30,10 @@ p {
   letter-spacing: 1px;
 }
 
-
-body {
-  width: 80%;
-  margin: 0 auto;
-  padding: 0 20px 20px 20px;
-}
-
-.buttonpanel {
-    text-align: center;
-}
-
-#mainsheet {
-  padding: 2em 1em;
-}
-
-
-#draggarea {
-    width: 800px;
-    height: 800px;
-    position: relative;
-}
-
-#droparea {
-    background-color: #ccbbbb;
-    margin: 1.5em;
-    border-radius: 8px;
-}
-
-.chorddrop {
-    height: 100px;
-    width: 100px;
-    display: inline-block;
-    background-color: #202070;
-    margin: 0.5em;
-    border-radius: 8px;
-}
-
-.chorddrop:hover {
-    background-color: lightblue;
-}
-
-.buttonpanel {
-    /* background-color: #202070; */
-    margin: 1.5em;
-}
-
-.sidebyside {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.svgarc {
-    fill: white;
-    stroke: black;
-    stroke-width: 2;
-}
-
-.dragarc text {
-    font-size: 45px;
-    fill: black;
-}
-
-.dragarc:hover:not(.currentChord){
-    fill: blue;
-}
-
-.currentChord {
-    fill: red;
-}
-
-
 button {
     margin: 0 auto;
     display: inline-block;
-    background-color: #202040;
+    background-color: var(--contrast-grey);
     color: #eeeeff;
     text-align: center;
     font-size: 20px;
@@ -102,9 +44,82 @@ button {
 
 }
 
-h1 {
-  margin: 0;
-  padding: 20px 0;
-  /* color: #dfdfef; */
+.melodypanel {
+    display: grid;
+    grid-template-columns: auto 20%;
 }
 
+#mainsheet {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 10px 0;
+
+}
+
+#droparea {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    background-color: var(--contrast-grey);
+    border-radius: 8px;
+    grid-column: 1;
+    grid-row: 2;
+    padding: 0 0 0 80px;
+    margin: 0 0 0 20px;
+}
+
+.chorddrop {
+    height: 50px;
+    width: 100px;
+    display: inline-block;
+    margin: 0 10px;
+    border-radius: 8px;
+    background-color: var(--drop-color);
+    cursor: pointer;
+}
+.chorddrop p {
+    font-size: 30px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.chorddrop:hover {
+    background-color: var(--hover-color);
+}
+
+.buttonpanel {
+    text-align: center;
+    grid-column: 2;
+    grid-row: 2;
+    margin: 1.5em;
+}
+
+
+#draggarea {
+    width: 800px;
+    height: 800px;
+    position: relative;
+}
+
+.svgarc {
+    fill: white;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.dragarc {
+    cursor: pointer;
+}
+
+.dragarc text {
+    font-size: 45px;
+    fill: black;
+}
+
+.dragarc:hover {
+    fill: var(--hover-color);
+}
+
+.currentChord:not(.hover){
+    fill: var(--selected-color);
+}

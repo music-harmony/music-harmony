@@ -99,7 +99,6 @@ function update_chord_line() {
         }
     });
     xmlcode = make_musicxml_chord_line(chords, 0);
-    // console.log(xmlcode);
     doc = make_musicxml_doc([loadedMelody, xmlcode]);
     osmd.load(doc).then(
         function() {
@@ -141,7 +140,7 @@ function draw_circle_of_fifths(){
 
         alpha += dAlpha;
 
-        osmdiv = make_key_display(i, cx, cy, ra+rb, alpha);
+        osmdiv = make_key_display(i, cx, cy, (ra+rb)/2, alpha);
         area.appendChild(osmdiv);
 
         alpha += dAlpha;
@@ -173,12 +172,18 @@ function make_svg_arc_segment(className, cx, cy, ra, rb, alphaA, alphaB){
 }
 
 function drop_chord_handler(ev){
-    console.log(ev);
     if (currentChordIndex === null){
         return;
     }
+    console.log(ev);
     index = ev.target.getAttribute("dropindex");
     selectedChords[index] = currentChordIndex;
+    console.log(index);
+    drop = document.getElementById("drop"+index);
+    newpar = document.createElement("p");
+    newpar.setAttribute("dropindex", index);
+    newpar.innerHTML = chordsNames[currentChordIndex];
+    drop.replaceChildren(newpar);
     update_chord_line();
 }
 
@@ -225,8 +230,9 @@ function make_key_display(index, cx, cy, radius, alpha) {
     );
     osmdiv.style.position = 'absolute';
     w = tonalityDisplayWidth[index];
-    x = cx + radius/2*Math.cos(alpha) - w;
-    y = cy + radius/2*Math.sin(alpha) - 40;
+    f = 65/80;
+    x = f*cx + f*radius*Math.cos(alpha) - w;
+    y = f*cy + f*radius*Math.sin(alpha) - 40;
     osmdiv.style.left = x + 'px';
     osmdiv.style.top = y + 'px';
     osmdiv.style.width = 2*w + 'px';
@@ -237,6 +243,7 @@ function make_key_display(index, cx, cy, radius, alpha) {
 function make_drop_element(index) {
     var drop_div = document.createElement("div");
     drop_div.setAttribute("dropindex", index);
+    drop_div.id = "drop"+index;
     drop_div.className = "chorddrop";
     drop_div.addEventListener("click", drop_chord_handler);
     document.getElementById("droparea").appendChild(drop_div);
