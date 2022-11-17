@@ -86,6 +86,7 @@ function update_chord_line() {
     newdiv.className = "musicsheet";
     var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(newdiv);
     osmd.setOptions({
+      autoResize: false,
       backend: "svg",
       drawTitle: false,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
