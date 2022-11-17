@@ -1,4 +1,6 @@
 
+var currentChordIndex = null;
+var __currentChordElement = null;
 var selectedChords = [null, null, null, null];
 var chordsDatabase = [
     ["C4", "E4", "G4"],
@@ -78,35 +80,6 @@ function load_melody_file(filename) {
     req.send();
 }
 
-function dragstart_handler(ev) {
- // ev.currentTarget.style.background = "lightblue";
- ev.dataTransfer.setData("chord_index", ev.target.id);
- ev.effectAllowed = "copyMove";
-}
-function dragenter_handler(ev) {
-  ev.target.style.background = "lightblue";
-  ev.preventDefault();
-}
-function dragleave_handler(ev) {
-  ev.target.style.background = "#202070";
-  ev.preventDefault();
-}
-function dragover_handler(ev) {
- ev.preventDefault();
-}
-function drop_handler(ev) {
-  ev.preventDefault();
-  ev.target.style.background = "#202070";
-  var chord_index = ev.dataTransfer.getData("chord_index");
-  var index = ev.target.id;
-  selectedChords[index] = chord_index;
-  update_chord_line();
-}
-
-function dragend_handler(ev) {
-  // ev.currentTarget.style.background = "white";
-  ev.dataTransfer.clearData();
-}
 
 function update_chord_line() {
     var newdiv = document.createElement("div");
@@ -125,7 +98,7 @@ function update_chord_line() {
         }
     });
     xmlcode = make_musicxml_chord_line(chords, 0);
-    console.log(xmlcode);
+    // console.log(xmlcode);
     doc = make_musicxml_doc([loadedMelody, xmlcode]);
     osmd.load(doc).then(
         function() {
@@ -137,76 +110,97 @@ function update_chord_line() {
 
 function draw_circle_of_fifths(){
     area = document.getElementById("draggarea");
-    rect = area.getBoundingClientRect();
-    canvas = document.createElement("canvas");
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    context = canvas.getContext("2d");
-    cx = canvas.width / 2;
-    cy = canvas.height / 2;
+    // make a svg element to display the little segments
+    svgarea = document.getElementById("svgarea");
+    // draw
+    cx = 400;
+    cy = 400;
     ra = 380;
     rb = 250;
     rc = 170;
     rd = 100;
-    context.lineWidth = 3;
-    context.strokeStyle = "black";
-
-    context.beginPath();
-    context.arc(cx, cy, ra, 0, 2*Math.PI, false);
-    context.stroke();
-
-    context.beginPath();
-    context.arc(cx, cy, rb, 0, 2*Math.PI, false);
-    context.stroke();
-
-    context.beginPath();
-    context.arc(cx, cy, rc, 0, 2*Math.PI, false);
-    context.stroke();
-
-    context.beginPath();
-    context.arc(cx, cy, rd, 0, 2*Math.PI, false);
-    context.stroke();
 
     n = 12;
     alpha = -7*Math.PI / 12;
     dAlpha = (Math.PI) / n;
     for (i = 0; i < n ; i++){
-        context.beginPath();
-        context.moveTo(cx + ra*Math.cos(alpha), cy + ra*Math.sin(alpha));
-        context.lineTo(cx + rd*Math.cos(alpha), cy + rd*Math.sin(alpha));
-        context.stroke();
+        // key display
+        elem = make_svg_arc_segment("svgarc backgroundarc", cx, cy, ra, rb, alpha, alpha+2*dAlpha);
+        svgarea.appendChild(elem);
+
+        // major chords
+        elem = make_svg_arc_segment("svgarc dragarc", cx, cy, rb, rc, alpha, alpha+2*dAlpha);
+        make_clickable_chord(elem, i, cx, cy, (rc+rb)/2, alpha+dAlpha);
+        svgarea.appendChild(elem);
+
+        // minor chords
+        elem = make_svg_arc_segment("svgarc dragarc", cx, cy, rc, rd, alpha, alpha+2*dAlpha);
+        make_clickable_chord(elem, i+n, cx, cy, (rc+rd)/2, alpha+dAlpha);
+        svgarea.appendChild(elem);
+
         alpha += dAlpha;
 
-        chord = make_draggable_chord(i+n, cx, cy, rc+rd, alpha);
-        area.appendChild(chord);
-        chord = make_draggable_chord(i, cx, cy, rc+rb, alpha);
-        area.appendChild(chord);
         osmdiv = make_key_display(i, cx, cy, ra+rb, alpha);
         area.appendChild(osmdiv);
 
         alpha += dAlpha;
     }
 
-    area.appendChild(canvas);
-
 }
 
-function make_draggable_chord(index, cx, cy, radius, alpha) {
-    // make html element
-    dragchord = document.createElement("div");
-    dragchord.id = index;
-    dragchord.className = "draggablechord";
-    dragchord.draggable = "true";
-    dragchord.addEventListener("dragstart", dragstart_handler);
-    dragchord.addEventListener("dragend", dragend_handler);
-    dragchord.innerHTML = chordsNames[index];
-    // position in circle
-    dragchord.style.position = 'absolute';
-    x = cx + radius/2*Math.cos(alpha) - 25;
-    y = cy + radius/2*Math.sin(alpha) - 25;
-    dragchord.style.left = x + 'px';
-    dragchord.style.top = y + 'px';
-    return dragchord;
+function polar_to_cart(cx, cy, radius, alpha){
+    return [cx + radius*Math.cos(alpha), cy + radius*Math.sin(alpha)];
+}
+
+function make_svg_arc_segment(className, cx, cy, ra, rb, alphaA, alphaB){
+    svgns = "http://www.w3.org/2000/svg";
+    elem = document.createElementNS(svgns, "g");
+    elem.setAttributeNS(null, "class", className);
+    path = document.createElementNS(svgns, "path");
+    p1 = polar_to_cart(cx, cy, ra, alphaA);
+    p2 = polar_to_cart(cx, cy, ra, alphaB);
+    p3 = polar_to_cart(cx, cy, rb, alphaB);
+    p4 = polar_to_cart(cx, cy, rb, alphaA);
+    code = ["M", ...p1,
+            "A", ra, ra, 0, 0, 1, ...p2,
+            "L", ...p3,
+            "A", rb, rb, 0, 0, 0, ...p4,
+            "Z"].join(" ");
+    path.setAttributeNS(null, "d", code);
+    elem.appendChild(path);
+    return elem;
+}
+
+function drop_chord_handler(ev){
+    console.log(ev);
+    if (currentChordIndex === null){
+        return;
+    }
+    index = ev.target.getAttribute("dropindex");
+    selectedChords[index] = currentChordIndex;
+    update_chord_line();
+}
+
+function clicked(ev){
+    if (__currentChordElement !== null){
+        __currentChordElement.classList.remove("currentChord");
+    }
+    __currentChordElement = ev.path[1];
+    __currentChordElement.classList.add("currentChord");
+    currentChordIndex = __currentChordElement.getAttribute("chordindex");
+}
+
+function make_clickable_chord(draggablechord, index, cx, cy, radius, alpha) {
+    svgns = "http://www.w3.org/2000/svg";
+    // compute the central position
+    [x, y] = polar_to_cart(cx, cy, radius, alpha);
+    draggablechord.setAttribute("chordindex", index);
+    draggablechord.addEventListener("click", clicked);
+    chord_text = document.createElementNS(svgns, "text");
+    chord_text.setAttributeNS(null, "x", x-15);
+    chord_text.setAttributeNS(null, "y", y+15);
+    chord_text.innerHTML = chordsNames[index];
+    draggablechord.appendChild(chord_text);
 }
 
 function make_key_display(index, cx, cy, radius, alpha) {
@@ -241,12 +235,9 @@ function make_key_display(index, cx, cy, radius, alpha) {
 
 function make_drop_element(index) {
     var drop_div = document.createElement("div");
-    drop_div.id = index;
+    drop_div.setAttribute("dropindex", index);
     drop_div.className = "chorddrop";
-    drop_div.addEventListener("drop", drop_handler);
-    drop_div.addEventListener("dragover", dragover_handler);
-    drop_div.addEventListener("dragenter", dragenter_handler);
-    drop_div.addEventListener("dragleave", dragleave_handler);
+    drop_div.addEventListener("click", drop_chord_handler);
     document.getElementById("droparea").appendChild(drop_div);
 }
 
@@ -299,7 +290,7 @@ function make_rest_measure(fifths){
 
 function make_musicxml_chord_line(chords, fifths) {
     var code = "";
-    console.log(chords);
+    // console.log(chords);
     for(let i = 0; i < chords.length; i++){
         chord = chords[i];
         if (chord === null){
@@ -319,7 +310,7 @@ function make_musicxml_chord(notes) {
   var code = ""; 
   for(let i = 0; i < notes.length; i++){
       note = notes[i];
-      console.log(note);
+      // console.log(note);
       var step = tagwrap("step", note[0]);
       var octave = tagwrap("octave", note[1]);
       alter = '';
