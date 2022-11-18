@@ -26,7 +26,7 @@ h1 {
 
 p {
   font-size: 16px;
-  line-height: 2;
+  line-height: 1.5;
   letter-spacing: 1px;
 }
 
@@ -78,7 +78,8 @@ button {
     cursor: pointer;
 }
 .chorddrop p {
-    font-size: 30px;
+    font-size: 40px;
+    font-weight: bold;
     text-align: center;
     margin: 0 auto;
 }
@@ -99,6 +100,10 @@ button {
     width: 800px;
     height: 800px;
     position: relative;
+}
+
+.keydisplay .vf-stavenote path {
+    fill: transparent;
 }
 
 .svgarc {

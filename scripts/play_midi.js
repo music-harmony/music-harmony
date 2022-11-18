@@ -114,8 +114,8 @@ function sendNotes(song, songStart, start, end, audioContext, input, player) {
         }
     }
 }
+
 function startLoad(song) {
-    console.log(song);
     var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContextFunc();
     player = new WebAudioFontPlayer();

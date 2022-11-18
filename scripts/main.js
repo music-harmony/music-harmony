@@ -1,4 +1,5 @@
 
+var currentMelody = null;
 var currentChordIndex = null;
 var __currentChordElement = null;
 var selectedChords = [null, null, null, null];
@@ -36,7 +37,7 @@ var tonalityFifths = [
 ];
 
 var tonalityDisplayWidth = [
-    55, 60, 65, 70, 75, 80, 85, 80, 75, 70, 65, 60,
+    50, 50, 55, 60, 62, 70, 75, 70, 59, 60, 55, 50,
 ];
 
 var chordsNames = [
@@ -68,6 +69,16 @@ var chordsNames = [
 ]
 
 var loadedMelody = null;
+
+function set_melody_to_harmonize(melody){
+    currentMelody = melody;
+    load_midi_file("midi/"+melody.name+".mid");
+    load_melody_file("midi/"+melody.name+".musicxml")
+
+    for (i = 0; i < melody.chordsDuration.length; i++){
+        make_drop_element(i);
+    }
+}
 
 function load_melody_file(filename) {
     var req = new XMLHttpRequest();
@@ -212,7 +223,7 @@ function make_clickable_chord(draggablechord, index, cx, cy, radius, alpha) {
 function make_key_display(index, cx, cy, radius, alpha) {
     var osmdiv = document.createElement("div");
     osmdiv.id = "osm-chord-"+index;
-    osmdiv.className = "musicsheet";
+    osmdiv.className = "keydisplay";
     var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(osmdiv);
     osmd.setOptions({
       backend: "svg",

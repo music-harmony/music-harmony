@@ -12,18 +12,12 @@
     <script src="scripts/opensheetmusicdisplay.min.js"></script>
 
     <script src="scripts/main.js"></script>
+    <script src="scripts/melodies.js"></script>
 
   </head>
   <body>
 
     <h1>Harmonise the melody</h1>
-
-    <script>
-        load_midi_file('midi/basic2.mid');
-    </script>
-
-
-
 
 
     <div class="melodypanel">
@@ -49,16 +43,8 @@
     </div>
 
     <script>
-        load_melody_file("midi/basic2.musicxml")
-
-        make_drop_element("0");
-        make_drop_element("1");
-        make_drop_element("2");
-        make_drop_element("3");
-
         draw_circle_of_fifths();
-
-
+        set_melody_to_harmonize(melodiesDatabase[0]);
     </script>
 
   </body>
