@@ -13,7 +13,7 @@ html {
 body {
   width: 90%;
   margin: 0 auto;
-  padding: 0 20px 20px 20px;
+  padding: 0 20px 0 20px;
 }
 
 h1 {
@@ -59,7 +59,7 @@ button {
 #droparea {
     display: flex;
     align-items: center;
-    justify-content: right;
+    justify-content: left;
     background-color: var(--contrast-grey);
     border-radius: 8px;
     grid-column: 1;
@@ -97,8 +97,6 @@ button {
 
 
 #draggarea {
-    width: 800px;
-    height: 800px;
     position: relative;
 }
 

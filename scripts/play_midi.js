@@ -51,7 +51,6 @@ function start_player() {
     chordnotes = make_midi_chord_line(chords);
     newnotes = loadedsongmelody.concat(chordnotes);
     loadedsong.tracks[0].notes = newnotes;
-    console.log(loadedsong);
     tick(loadedsong, stepDuration);
 }
 function tick(song, stepDuration) {
@@ -74,7 +73,6 @@ function make_midi_chord_line(chords){
     for(let c = 0; c < chords.length; c++){
         chord = chords[c];
         if (chord !== null){
-            console.log(chord);
             for(let i = 0; i < chord.length; i++){
                 pitch = chord[i];
                 notes[noteIndex] = {"when": 2*c, "pitch": pitch, "duration": 2.0, "slides": []};

@@ -186,10 +186,8 @@ function drop_chord_handler(ev){
     if (currentChordIndex === null){
         return;
     }
-    console.log(ev);
     index = ev.target.getAttribute("dropindex");
     selectedChords[index] = currentChordIndex;
-    console.log(index);
     drop = document.getElementById("drop"+index);
     newpar = document.createElement("p");
     newpar.setAttribute("dropindex", index);
@@ -199,7 +197,6 @@ function drop_chord_handler(ev){
 }
 
 function clicked(ev){
-    console.log(ev);
     if (__currentChordElement !== null){
         __currentChordElement.classList.remove("currentChord");
     }
@@ -310,7 +307,6 @@ function make_rest_measure(fifths){
 
 function make_musicxml_chord_line(chords, fifths) {
     var code = "";
-    // console.log(chords);
     for(let i = 0; i < chords.length; i++){
         chord = chords[i];
         if (chord === null){
@@ -330,7 +326,6 @@ function make_musicxml_chord(notes) {
   var code = ""; 
   for(let i = 0; i < notes.length; i++){
       note = notes[i];
-      // console.log(note);
       var step = tagwrap("step", note[0]);
       var octave = tagwrap("octave", note[1]);
       alter = '';
