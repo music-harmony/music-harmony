@@ -203,7 +203,7 @@ function clicked(ev){
     if (__currentChordElement !== null){
         __currentChordElement.classList.remove("currentChord");
     }
-    __currentChordElement = ev.target;
+    __currentChordElement = ev.target.parentNode;
     __currentChordElement.classList.add("currentChord");
     currentChordIndex = __currentChordElement.getAttribute("chordindex");
 }
@@ -215,7 +215,6 @@ function make_clickable_chord(draggablechord, index, cx, cy, radius, alpha) {
     draggablechord.setAttribute("chordindex", index);
     draggablechord.addEventListener("click", clicked);
     chord_text = document.createElementNS(svgns, "text");
-    chord_text.setAttribute("chordindex", index);
     chord_text.setAttributeNS(null, "x", x-15);
     chord_text.setAttributeNS(null, "y", y+15);
     chord_text.innerHTML = chordsNames[index];
