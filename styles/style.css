@@ -45,14 +45,11 @@ button {
 }
 
 .melodypanel {
-    display: grid;
-    grid-template-columns: auto 20%;
 }
 
 #mainsheet {
-  grid-column: 1;
-  grid-row: 1;
-  padding: 10px 0;
+    padding: 10px 0;
+    width: 100%;
 }
 
 #mainsheet div {
@@ -66,20 +63,22 @@ button {
     justify-content: left;
     background-color: var(--contrast-grey);
     border-radius: 8px;
-    padding: 8px 0 8px 80px;
-    margin: 0 0 0 20px;
+    padding: 8px 0 8px 110px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 #droparea_container {
-    grid-column: 1;
-    grid-row: 2;
+    padding: 0 15px 0 18px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .chorddrop {
     height: 50px;
-    width: 100px;
+    width: 100%;
     display: inline-block;
-    margin: 0 10px;
+    margin: 0 10px 0 0;
     border-radius: 8px;
     background-color: var(--drop-color);
     cursor: pointer;
@@ -95,16 +94,20 @@ button {
     background-color: var(--hover-color);
 }
 
-.buttonpanel {
-    text-align: center;
-    grid-column: 2;
-    grid-row: 2;
-    margin: 1.5em;
+#tools {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
 #draggarea {
     position: relative;
+}
+
+#svgarea {
+    width: 650px;
+    height: 650px;
 }
 
 .keydisplay .vf-stavenote path {
@@ -132,4 +135,30 @@ button {
 
 .currentChord:not(.hover){
     fill: var(--selected-color);
+}
+
+.buttonpanel {
+    display: grid;
+    /* margin: 1.5em; */
+}
+
+.buttonpanel button {
+    margin: 3px;
+}
+
+#playbtn {
+    grid-row: 1;
+    grid-column: 1;
+}
+#stopbtn {
+    grid-row: 1;
+    grid-column: 2;
+}
+#nextbtn {
+    grid-row: 2;
+    grid-column: 2;
+}
+#playbtn {
+    grid-row: 1;
+    grid-column: 1;
 }

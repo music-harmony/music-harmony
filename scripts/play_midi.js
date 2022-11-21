@@ -1,5 +1,6 @@
 var audioContext = null;
 var player = null;
+var isPlaying = false;
 var reverberator = null;
 var equalizer = null;
 var songStart = 0;
@@ -51,14 +52,24 @@ function start_player() {
     chordnotes = make_midi_chord_line(chords);
     newnotes = loadedsongmelody.concat(chordnotes);
     loadedsong.tracks[0].notes = newnotes;
+    isPlaying = true;
     tick(loadedsong, stepDuration);
 }
+
+function stop_player(){
+    isPlaying = false;
+    player.cancelQueue(audioContext);
+}
 function tick(song, stepDuration) {
+    if (!isPlaying){
+        return;
+    }
     if (audioContext.currentTime > nextStepTime - stepDuration) {
         sendNotes(song, songStart, currentSongTime, currentSongTime + stepDuration, audioContext, input, player);
         currentSongTime = currentSongTime + stepDuration;
         nextStepTime = nextStepTime + stepDuration;
         if (currentSongTime > song.duration) {
+            isPlaying = false;
             return
         }
     }

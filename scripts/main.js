@@ -2,7 +2,7 @@
 var currentMelody = null;
 var currentChordIndex = null;
 var __currentChordElement = null;
-var selectedChords = [null, null, null, null];
+var selectedChords = [];
 var chordsDatabase = [
     ["C4", "E4", "G4"],
     ["G4", "B4", "D5"],
@@ -74,7 +74,8 @@ function set_melody_to_harmonize(melody){
     currentMelody = melody;
     load_midi_file("midi/"+melody.name+".mid");
     load_melody_file("midi/"+melody.name+".musicxml")
-
+    
+    selectedChords = Array.from({length: melody.chordsDuration.length}, () => null);
     for (i = 0; i < melody.chordsDuration.length; i++){
         make_drop_element(i);
     }
@@ -97,9 +98,11 @@ function update_chord_line() {
     newdiv.className = "musicsheet";
     var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(newdiv);
     osmd.setOptions({
-      autoResize: false,
+      autoResize: true,
       backend: "svg",
       drawTitle: false,
+      drawMeasureNumbers: false,
+      stretchLastSystemLine: true,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
     chords = selectedChords.map(function(chord_index){
@@ -109,7 +112,7 @@ function update_chord_line() {
             return chordsDatabase[chord_index];
         }
     });
-    xmlcode = make_musicxml_chord_line(chords, 0);
+    xmlcode = make_musicxml_chord_line(chords, currentMelody.fifths);
     doc = make_musicxml_doc([loadedMelody, xmlcode]);
     osmd.load(doc).then(
         function() {
@@ -186,6 +189,7 @@ function drop_chord_handler(ev){
     if (currentChordIndex === null){
         return;
     }
+    stop_player();
     index = ev.target.getAttribute("dropindex");
     selectedChords[index] = currentChordIndex;
     drop = document.getElementById("drop"+index);
