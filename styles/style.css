@@ -53,19 +53,26 @@ button {
   grid-column: 1;
   grid-row: 1;
   padding: 10px 0;
+}
 
+#mainsheet div {
+    margin: 0;
+    padding: 0;
 }
 
 #droparea {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: left;
     background-color: var(--contrast-grey);
     border-radius: 8px;
+    padding: 8px 0 8px 80px;
+    margin: 0 0 0 20px;
+}
+
+#droparea_container {
     grid-column: 1;
     grid-row: 2;
-    padding: 0 0 0 80px;
-    margin: 0 0 0 20px;
 }
 
 .chorddrop {
