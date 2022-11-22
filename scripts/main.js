@@ -1,5 +1,6 @@
 
 var currentMelody = null;
+var currentMelodyIndex = 0;
 var currentChordIndex = null;
 var __currentChordElement = null;
 var selectedChords = [];
@@ -70,16 +71,31 @@ var chordsNames = [
 
 var loadedMelody = null;
 
+function goto_next_melody(){
+    if (currentMelodyIndex < melodiesDatabase.length) {
+        currentMelodyIndex++;
+        set_melody_to_harmonize(melodiesDatabase[currentMelodyIndex]);
+    }
+}
+
+function goto_previous_melody(){
+    if (currentMelodyIndex > 0) {
+        currentMelodyIndex--;
+        set_melody_to_harmonize(melodiesDatabase[currentMelodyIndex]);
+    }
+}
+
 function set_melody_to_harmonize(melody){
     currentMelody = melody;
     load_midi_file("midi/"+melody.name+".mid");
     load_melody_file("midi/"+melody.name+".musicxml")
     
-    droparea = document.getElementById("droparea")
+    var droparea = document.getElementById("droparea")
+    droparea.replaceChildren();
     droparea.style["padding-left"] = (80+10*Math.abs(melody.fifths))+"px";
     selectedChords = Array.from({length: melody.chordsDuration.length}, () => null);
     for (i = 0; i < melody.chordsDuration.length; i++){
-        make_drop_element(i);
+        make_drop_element(i, melody.chordsDuration[i]);
     }
 }
 
@@ -107,15 +123,17 @@ function update_chord_line() {
       stretchLastSystemLine: true,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    chords = selectedChords.map(function(chord_index){
+    var chords = selectedChords.map(function(chord_index, i){
         if (chord_index === null){
-            return null;
+            var chord_notes = null;
         } else {
-            return chordsDatabase[chord_index];
+            var chord_notes = chordsDatabase[chord_index];
         }
+        return {notes: chord_notes, 
+                duration: currentMelody.chordsDuration[i]}; // index of chord in map
     });
-    xmlcode = make_musicxml_chord_line(chords, currentMelody.fifths);
-    doc = make_musicxml_doc([loadedMelody, xmlcode]);
+    var xmlcode = make_musicxml_chord_line(chords, currentMelody.fifths);
+    var doc = make_musicxml_doc([loadedMelody, xmlcode]);
     osmd.load(doc).then(
         function() {
           osmd.render();
@@ -125,38 +143,38 @@ function update_chord_line() {
 }
 
 function draw_circle_of_fifths(){
-    area = document.getElementById("draggarea");
+    var area = document.getElementById("draggarea");
     // make a svg element to display the little segments
-    svgarea = document.getElementById("svgarea");
+    var svgarea = document.getElementById("svgarea");
     // draw
-    cx = 400;
-    cy = 400;
-    ra = 380;
-    rb = 250;
-    rc = 170;
-    rd = 100;
+    var cx = 400;
+    var cy = 400;
+    var ra = 380;
+    var rb = 250;
+    var rc = 170;
+    var rd = 100;
 
-    n = 12;
-    alpha = -7*Math.PI / 12;
-    dAlpha = (Math.PI) / n;
+    var n = 12;
+    var alpha = -7*Math.PI / 12;
+    var dAlpha = (Math.PI) / n;
     for (i = 0; i < n ; i++){
         // key display
-        elem = make_svg_arc_segment("svgarc backgroundarc", cx, cy, ra, rb, alpha, alpha+2*dAlpha);
+        var elem = make_svg_arc_segment("svgarc backgroundarc", cx, cy, ra, rb, alpha, alpha+2*dAlpha);
         svgarea.appendChild(elem);
 
         // major chords
-        elem = make_svg_arc_segment("svgarc dragarc", cx, cy, rb, rc, alpha, alpha+2*dAlpha);
+        var elem = make_svg_arc_segment("svgarc dragarc", cx, cy, rb, rc, alpha, alpha+2*dAlpha);
         make_clickable_chord(elem, i, cx, cy, (rc+rb)/2, alpha+dAlpha);
         svgarea.appendChild(elem);
 
         // minor chords
-        elem = make_svg_arc_segment("svgarc dragarc", cx, cy, rc, rd, alpha, alpha+2*dAlpha);
+        var elem = make_svg_arc_segment("svgarc dragarc", cx, cy, rc, rd, alpha, alpha+2*dAlpha);
         make_clickable_chord(elem, i+n, cx, cy, (rc+rd)/2, alpha+dAlpha);
         svgarea.appendChild(elem);
 
         alpha += dAlpha;
 
-        osmdiv = make_key_display(i, cx, cy, (ra+rb)/2, alpha);
+        var osmdiv = make_key_display(i, cx, cy, (ra+rb)/2, alpha);
         area.appendChild(osmdiv);
 
         alpha += dAlpha;
@@ -169,19 +187,19 @@ function polar_to_cart(cx, cy, radius, alpha){
 }
 
 function make_svg_arc_segment(className, cx, cy, ra, rb, alphaA, alphaB){
-    svgns = "http://www.w3.org/2000/svg";
-    elem = document.createElementNS(svgns, "g");
+    var svgns = "http://www.w3.org/2000/svg";
+    var elem = document.createElementNS(svgns, "g");
     elem.setAttributeNS(null, "class", className);
-    path = document.createElementNS(svgns, "path");
-    p1 = polar_to_cart(cx, cy, ra, alphaA);
-    p2 = polar_to_cart(cx, cy, ra, alphaB);
-    p3 = polar_to_cart(cx, cy, rb, alphaB);
-    p4 = polar_to_cart(cx, cy, rb, alphaA);
-    code = ["M", ...p1,
-            "A", ra, ra, 0, 0, 1, ...p2,
-            "L", ...p3,
-            "A", rb, rb, 0, 0, 0, ...p4,
-            "Z"].join(" ");
+    var path = document.createElementNS(svgns, "path");
+    var p1 = polar_to_cart(cx, cy, ra, alphaA);
+    var p2 = polar_to_cart(cx, cy, ra, alphaB);
+    var p3 = polar_to_cart(cx, cy, rb, alphaB);
+    var p4 = polar_to_cart(cx, cy, rb, alphaA);
+    var code = ["M", ...p1,
+                "A", ra, ra, 0, 0, 1, ...p2,
+                "L", ...p3,
+                "A", rb, rb, 0, 0, 0, ...p4,
+                "Z"].join(" ");
     path.setAttributeNS(null, "d", code);
     elem.appendChild(path);
     return elem;
@@ -192,10 +210,10 @@ function drop_chord_handler(ev){
         return;
     }
     stop_player();
-    index = ev.target.getAttribute("dropindex");
+    var index = ev.target.getAttribute("dropindex");
     selectedChords[index] = currentChordIndex;
-    drop = document.getElementById("drop"+index);
-    newpar = document.createElement("p");
+    var drop = document.getElementById("drop"+index);
+    var newpar = document.createElement("p");
     newpar.setAttribute("dropindex", index);
     newpar.innerHTML = chordsNames[currentChordIndex];
     drop.replaceChildren(newpar);
@@ -212,12 +230,12 @@ function clicked(ev){
 }
 
 function make_clickable_chord(draggablechord, index, cx, cy, radius, alpha) {
-    svgns = "http://www.w3.org/2000/svg";
+    var svgns = "http://www.w3.org/2000/svg";
     // compute the central position
     [x, y] = polar_to_cart(cx, cy, radius, alpha);
     draggablechord.setAttribute("chordindex", index);
     draggablechord.addEventListener("click", clicked);
-    chord_text = document.createElementNS(svgns, "text");
+    var chord_text = document.createElementNS(svgns, "text");
     chord_text.setAttributeNS(null, "x", x-15);
     chord_text.setAttributeNS(null, "y", y+15);
     chord_text.innerHTML = chordsNames[index];
@@ -235,8 +253,8 @@ function make_key_display(index, cx, cy, radius, alpha) {
       drawTimeSignatures: false,
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    fifths = tonalityFifths[index];
-    measurexml = make_musicxml_chord_line([null], fifths);
+    var fifths = tonalityFifths[index];
+    var measurexml = make_musicxml_chord_line([{notes: null, duration: 4}], fifths);
     var xmlcode = make_musicxml_doc([measurexml], 0);
     osmd.load(xmlcode).then(
         function() {
@@ -244,10 +262,10 @@ function make_key_display(index, cx, cy, radius, alpha) {
         }
     );
     osmdiv.style.position = 'absolute';
-    w = tonalityDisplayWidth[index];
-    f = 65/80;
-    x = f*cx + f*radius*Math.cos(alpha) - w;
-    y = f*cy + f*radius*Math.sin(alpha) - 40;
+    var w = tonalityDisplayWidth[index];
+    var f = 65/80;
+    var x = f*cx + f*radius*Math.cos(alpha) - w;
+    var y = f*cy + f*radius*Math.sin(alpha) - 40;
     osmdiv.style.left = x + 'px';
     osmdiv.style.top = y + 'px';
     osmdiv.style.width = 2*w + 'px';
@@ -255,13 +273,14 @@ function make_key_display(index, cx, cy, radius, alpha) {
     return osmdiv;
 }
 
-function make_drop_element(index) {
+function make_drop_element(index, widthFactor) {
     var drop_div = document.createElement("div");
     drop_div.setAttribute("dropindex", index);
     drop_div.id = "drop"+index;
     drop_div.className = "chorddrop";
+    drop_div.style['width'] = (50*widthFactor)+"%";
     drop_div.addEventListener("click", drop_chord_handler);
-    droparea = document.getElementById("droparea")
+    var droparea = document.getElementById("droparea")
     droparea.appendChild(drop_div);
 }
 
@@ -280,12 +299,12 @@ function make_musicxml_doc(parts) {
     "-//Recordare//DTD MusicXML 4.0 Partwise//EN"
     "http://www.musicxml.org/dtds/partwise.dtd">
 <score-partwise version="4.0">`;
-  partlist = ""
+  var partlist = ""
   for(let i = 0; i < parts.length; i++){
       partlist += tagwrapattr('score-part id="P'+(i+1)+'"', 'score-part', '');
   }
   partlist = tagwrap("part-list", partlist);
-  xmlparts = ""
+  var xmlparts = ""
   for(let i = 0; i < parts.length; i++){
       part = tagwrapattr('part id="P'+(i+1)+'"', 'part', parts[i]);
       xmlparts += part;
@@ -296,46 +315,63 @@ var footer = `
 }
 
 function make_measure_attributes(fifths){
-    div = tagwrap("divisions", 1);
-    key = tagwrap("key", tagwrap("fifths", fifths));
-    time = tagwrap("time", tagwrap("beats", "4")+tagwrap("beat-type", "4"));
-    clef = tagwrap("clef", tagwrap("sign", "G")+tagwrap("line", "2"));
+    var div = tagwrap("divisions", 1);
+    var key = tagwrap("key", tagwrap("fifths", fifths));
+    var time = tagwrap("time", tagwrap("beats", "4")+tagwrap("beat-type", "4"));
+    var clef = tagwrap("clef", tagwrap("sign", "G")+tagwrap("line", "2"));
     return tagwrap("attributes", div+key+time+clef);
 }
 
 
-function make_rest_measure(fifths){
-    rest = '<rest/>';
-    dur = tagwrap('duration', 4);
-    type = tagwrap('type', 'whole');
-    note = tagwrap('note', rest+dur+type);
+function make_rest_measure(fifths, duration){
+    var rest = '<rest/>';
+      if (duration == 4){
+          var dur = tagwrap("duration", "4");
+          var type = tagwrap("type", "whole");
+      } else if (duration == 2){
+          var dur = tagwrap("duration", "2");
+          var type = tagwrap("type", "half");
+      } else if (duration == 1){
+          var dur = tagwrap("duration", "1");
+          var type = tagwrap("type", "quarter");
+      }
+    var note = tagwrap('note', rest+dur+type);
     return note;
 }
 
 function make_musicxml_chord_line(chords, fifths) {
     var code = "";
+    var measure = "";
+    var length = 0;
     for(let i = 0; i < chords.length; i++){
-        chord = chords[i];
-        if (chord === null){
-            measure = make_rest_measure(fifths);
+        var chord = chords[i];
+        if (chord.notes === null){
+            measure += make_rest_measure(fifths, chord.duration);
+            length += chord.duration;
         } else {
-            measure = make_musicxml_chord(chord);
+            measure += make_musicxml_chord(chord);
+            length += chord.duration;
         }
         if (i === 0){
             measure = make_measure_attributes(fifths) + measure;
         }
-        code += tagwrapattr('measure number="'+(i+1)+'"', 'measure', measure);
+        if (length >= 4){
+            code += tagwrapattr('measure number="'+(i+1)+'"', 'measure', measure);
+            measure = "";
+            length = 0;
+        }
     }
     return code;
 }
 
-function make_musicxml_chord(notes) {
+function make_musicxml_chord(chord) {
   var code = ""; 
+  var notes = chord.notes;
   for(let i = 0; i < notes.length; i++){
-      note = notes[i];
+      var note = notes[i];
       var step = tagwrap("step", note[0]);
       var octave = tagwrap("octave", note[1]);
-      alter = '';
+      var alter = '';
       if (note.length > 2){
           if (note[2] == '#'){
               alter = '1';
@@ -345,8 +381,16 @@ function make_musicxml_chord(notes) {
           alter = tagwrap("alter", alter);
       }
       var pitch = tagwrap("pitch", step+octave+alter);
-      var dur = tagwrap("duration", "4");
-      var type = tagwrap("type", "whole");
+      if (chord.duration == 4){
+          var dur = tagwrap("duration", "4");
+          var type = tagwrap("type", "whole");
+      } else if (chord.duration == 2){
+          var dur = tagwrap("duration", "2");
+          var type = tagwrap("type", "half");
+      } else if (chord.duration == 1){
+          var dur = tagwrap("duration", "1");
+          var type = tagwrap("type", "quarter");
+      }
       var accidental = '';
       if (note.length > 2){
           if (note[2] == '#'){
