@@ -42,12 +42,14 @@ function start_player() {
     songStart = audioContext.currentTime;
     nextStepTime = audioContext.currentTime;
     var stepDuration = 44 / 1000;
-    chords = selectedChords.map(function(chord_index){
+    var chords = selectedChords.map(function(chord_index, i){
         if (chord_index === null){
-            return null;
+            var chord_notes = null;
         } else {
-            return midiChords[chord_index];
+            var chord_notes = midiChords[chord_index];
         }
+        return {notes: chord_notes, 
+                duration: currentMelody.chordsDuration[i]};
     });
     chordnotes = make_midi_chord_line(chords);
     newnotes = loadedsongmelody.concat(chordnotes);
@@ -81,14 +83,16 @@ function tick(song, stepDuration) {
 function make_midi_chord_line(chords){
     notes = [];
     noteIndex = 0;
+    var time = 0.0;
     for(let c = 0; c < chords.length; c++){
         chord = chords[c];
-        if (chord !== null){
-            for(let i = 0; i < chord.length; i++){
-                pitch = chord[i];
-                notes[noteIndex] = {"when": 2*c, "pitch": pitch, "duration": 2.0, "slides": []};
+        if (chord.notes !== null){
+            for(let i = 0; i < chord.notes.length; i++){
+                pitch = chord.notes[i];
+                notes[noteIndex] = {"when": time, "pitch": pitch, "duration": chord.duration/2.0, "slides": []};
                 noteIndex++;
             }
+            time += chord.duration/2.0;
         }
     }
     return notes;

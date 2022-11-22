@@ -110,6 +110,21 @@ function load_melody_file(filename) {
     req.send();
 }
 
+function check_chords(){
+    var droparea = document.getElementById("droparea")
+    var wrongChords = 0;
+    selectedChords.map(function(chord_index, i){
+        var expected = currentMelody.expectedChords[i];
+        var dropelem = droparea.children[i];
+        if (!(chord_index === null) && expected === Number(chord_index)){
+            dropelem.classList.remove("wrongChord")
+        } else {
+            dropelem.classList.add("wrongChord")
+            wrongChords++;
+        }
+    });
+}
+
 
 function update_chord_line() {
     var newdiv = document.createElement("div");
@@ -130,7 +145,7 @@ function update_chord_line() {
             var chord_notes = chordsDatabase[chord_index];
         }
         return {notes: chord_notes, 
-                duration: currentMelody.chordsDuration[i]}; // index of chord in map
+                duration: currentMelody.chordsDuration[i]};
     });
     var xmlcode = make_musicxml_chord_line(chords, currentMelody.fifths);
     var doc = make_musicxml_doc([loadedMelody, xmlcode]);
