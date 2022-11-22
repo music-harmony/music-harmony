@@ -75,6 +75,8 @@ function set_melody_to_harmonize(melody){
     load_midi_file("midi/"+melody.name+".mid");
     load_melody_file("midi/"+melody.name+".musicxml")
     
+    droparea = document.getElementById("droparea")
+    droparea.style["padding-left"] = (80+10*Math.abs(melody.fifths))+"px";
     selectedChords = Array.from({length: melody.chordsDuration.length}, () => null);
     for (i = 0; i < melody.chordsDuration.length; i++){
         make_drop_element(i);
@@ -259,7 +261,8 @@ function make_drop_element(index) {
     drop_div.id = "drop"+index;
     drop_div.className = "chorddrop";
     drop_div.addEventListener("click", drop_chord_handler);
-    document.getElementById("droparea").appendChild(drop_div);
+    droparea = document.getElementById("droparea")
+    droparea.appendChild(drop_div);
 }
 
 function tagwrap(tag, body){
