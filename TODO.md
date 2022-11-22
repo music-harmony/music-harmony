@@ -9,3 +9,11 @@
 4.  Moodle pages (access control -> following the order, different group access, timestamp) -> Siyi
     
 5.  Website (check button, next page, retry button, highlight the chosen chords, melody example, align each bar with the same length) melody are 8 or 4 bars -> Baptiste, siyi
+
+## 22.11.2022
+1.  Melody and Ground Truth
+2. Question in Pretest → basic information test
+3. Flow (2 different actibities(i-ps and ps-i))
+4. Examples for instruction
+5. Automatically login
+6. Website
