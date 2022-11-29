@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Digital education demo</title>
+    <link href="../styles/style.css" rel="stylesheet" type="text/css">
+
+    <script src="../scripts/WebAudioFontPlayer.js"></script>
+    <script src="../scripts/MIDIFile.js"></script>
+    <script src="../scripts/play_midi.js"></script>
+
+    <script src="../scripts/opensheetmusicdisplay.min.js"></script>
+
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/melodies.js"></script>
+
+  </head>
+  <body>
+
+    <div id="page">
+        <div id="titlediv">
+            <h1>Harmonise the melody</h1>
+        </div>
+
+
+        <div class="melodypanel">
+
+            <div id="mainsheet">
+            </div>
+
+            <div id="droparea_container">
+                <div id="droparea">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="tools">
+
+            <div id="draggarea">
+                <div id="overlaykeys">
+                </div>
+
+                <svg id="svgarea" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                </svg>
+
+            </div>
+
+            <div class="leftpanel">
+                <div id="melodycount">
+                </div>
+
+                <p id="inst">
+                Clic in the circle to select a chord,<br>
+                then clic on the blue rectangles to place it.
+                </p>
+
+                <div class="buttonpanel">
+                    <div class="centerbtn">
+                        <button id="playbtn" onclick="start_player();">Play</button>
+                    </div>
+                    <div class="centerbtn">
+                        <button id="stopbtn" onclick="stop_player();">Stop</button>
+                    </div>
+
+                    <div class="centerbtn">
+                        <button id="prevbtn" onclick="goto_previous_melody();">Previous</button>
+                    </div>
+
+                    <div class="centerbtn">
+                        <button id="nextbtn" onclick="goto_next_melody();">Next</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            draw_circle_of_fifths();
+            set_melody_to_harmonize(melodiesDatabase[0]);
+        </script>
+    </div>
+
+
+  </body>
+</html
