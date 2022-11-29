@@ -3,6 +3,7 @@ var currentMelody = null;
 var currentMelodyIndex = 0;
 var currentChordIndex = null;
 var __currentChordElement = null;
+var __svgScaleFactor = 1.0;
 var selectedChords = [];
 var chordsDatabase = [
     ["C4", "E4", "G4"],
@@ -72,13 +73,15 @@ var chordsNames = [
 var loadedMelody = null;
 
 function goto_next_melody(){
-    if (currentMelodyIndex < melodiesDatabase.length) {
+    stop_player();
+    if (currentMelodyIndex < melodiesDatabase.length - 1) {
         currentMelodyIndex++;
         set_melody_to_harmonize(melodiesDatabase[currentMelodyIndex]);
     }
 }
 
 function goto_previous_melody(){
+    stop_player();
     if (currentMelodyIndex > 0) {
         currentMelodyIndex--;
         set_melody_to_harmonize(melodiesDatabase[currentMelodyIndex]);
@@ -160,9 +163,17 @@ function update_chord_line() {
 }
 
 function draw_circle_of_fifths(){
+    var tools = document.getElementById("tools");
+    var height = 0.7*tools.clientHeight;
+    __svgScaleFactor = height/800;
     var area = document.getElementById("draggarea");
+    var overlay = document.getElementById("overlaykeys");
+    overlay.replaceChildren();
     // make a svg element to display the little segments
     var svgarea = document.getElementById("svgarea");
+    svgarea.style.width = height+"px";
+    svgarea.style.height = height+"px";
+    svgarea.replaceChildren();
     // draw
     var cx = 400;
     var cy = 400;
@@ -192,7 +203,7 @@ function draw_circle_of_fifths(){
         alpha += dAlpha;
 
         var osmdiv = make_key_display(i, cx, cy, (ra+rb)/2, alpha);
-        area.appendChild(osmdiv);
+        overlay.appendChild(osmdiv);
 
         alpha += dAlpha;
     }
@@ -282,7 +293,7 @@ function make_key_display(index, cx, cy, radius, alpha) {
     );
     osmdiv.style.position = 'absolute';
     var w = tonalityDisplayWidth[index];
-    var f = 65/80;
+    var f = __svgScaleFactor;
     var x = f*cx + f*radius*Math.cos(alpha) - w;
     var y = f*cy + f*radius*Math.sin(alpha) - 40;
     osmdiv.style.left = x + 'px';
@@ -291,6 +302,10 @@ function make_key_display(index, cx, cy, radius, alpha) {
     osmdiv.style.height = '80px';
     return osmdiv;
 }
+
+window.addEventListener("resize", function(event){
+    draw_circle_of_fifths();
+});
 
 function make_drop_element(index, widthFactor) {
     var drop_div = document.createElement("div");

@@ -17,47 +17,52 @@
   </head>
   <body>
 
-    <h1>Harmonise the melody</h1>
-
-
-    <div class="melodypanel">
-
-    <div id="mainsheet">
-    </div>
-
-    <div id="droparea_container">
-
-        <div id="droparea">
+    <div id="page">
+        <div id="titlediv">
+            <h1>Harmonise the melody</h1>
         </div>
-    </div>
 
 
+        <div class="melodypanel">
 
-    </div>
+            <div id="mainsheet">
+            </div>
 
-
-    <div id="tools">
-
-        <div id="draggarea">
-            <svg id="svgarea" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-            </svg>
+            <div id="droparea_container">
+                <div id="droparea">
+                </div>
+            </div>
 
         </div>
 
-        <div class="buttonpanel">
-            <button id="playbtn" onclick="start_player();">Play</button>
-            <button id="stopbtn" onclick="stop_player();">Stop</button>
-            <button id="nextbtn" onclick="goto_next_melody();">Next</button>
-            <button id="prevbtn" onclick="goto_previous_melody();">Previous</button>
 
-            <button id="checkbtn" onclick="check_chords();">Check</button>
+        <div id="tools">
+
+            <div id="draggarea">
+                <div id="overlaykeys">
+                </div>
+
+                <svg id="svgarea" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                </svg>
+
+            </div>
+
+            <div class="buttonpanel">
+                <button id="playbtn" onclick="start_player();">Play</button>
+                <button id="stopbtn" onclick="stop_player();">Stop</button>
+                <button id="nextbtn" onclick="goto_next_melody();">Next</button>
+                <button id="prevbtn" onclick="goto_previous_melody();">Previous</button>
+
+                <button id="checkbtn" onclick="check_chords();">Check</button>
+            </div>
         </div>
+
+        <script>
+            draw_circle_of_fifths();
+            set_melody_to_harmonize(melodiesDatabase[0]);
+        </script>
     </div>
 
-    <script>
-        draw_circle_of_fifths();
-        set_melody_to_harmonize(melodiesDatabase[0]);
-    </script>
 
   </body>
 </html
