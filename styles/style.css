@@ -1,5 +1,6 @@
 :root {
     --wrong-chord: #ee3300;
+    --right-chord: #33ee00;
     --drop-color: #bbd2ee;
     --contrast-grey: #222222;
     --hover-color: #33bbee;
@@ -96,6 +97,10 @@ button {
 
 .wrongChord {
     background-color: var(--wrong-chord);
+}
+
+.rightChord {
+    background-color: var(--right-chord);
 }
 
 #tools {

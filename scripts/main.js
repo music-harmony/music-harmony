@@ -118,8 +118,10 @@ function check_chords(){
         var dropelem = droparea.children[i];
         if (!(chord_index === null) && expected === Number(chord_index)){
             dropelem.classList.remove("wrongChord")
+            dropelem.classList.add("rightChord")
         } else {
             dropelem.classList.add("wrongChord")
+            dropelem.classList.remove("rightChord")
             wrongChords++;
         }
     });
@@ -228,6 +230,8 @@ function drop_chord_handler(ev){
     var index = ev.target.getAttribute("dropindex");
     selectedChords[index] = currentChordIndex;
     var drop = document.getElementById("drop"+index);
+    drop.classList.remove("rightChord")
+    drop.classList.remove("wrongChord")
     var newpar = document.createElement("p");
     newpar.setAttribute("dropindex", index);
     newpar.innerHTML = chordsNames[currentChordIndex];
