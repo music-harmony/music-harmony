@@ -119,7 +119,7 @@ function check_chords(){
     selectedChords.map(function(chord_index, i){
         var expected = currentMelody.expectedChords[i];
         var dropelem = droparea.children[i];
-        if (!(chord_index === null) && expected === Number(chord_index)){
+        if (!(chord_index === null) && expected.includes(Number(chord_index))){
             dropelem.classList.remove("wrongChord")
             dropelem.classList.add("rightChord")
         } else {
@@ -164,7 +164,7 @@ function update_chord_line() {
 
 function draw_circle_of_fifths(){
     var tools = document.getElementById("tools");
-    var height = Math.max(0.8*tools.clientHeight, 500);
+    var height = Math.max(0.7*tools.clientHeight, 500);
     __svgScaleFactor = height/800;
     var area = document.getElementById("draggarea");
     var overlay = document.getElementById("overlaykeys");
