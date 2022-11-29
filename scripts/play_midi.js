@@ -92,8 +92,8 @@ function make_midi_chord_line(chords){
                 notes[noteIndex] = {"when": time, "pitch": pitch, "duration": chord.duration/2.0, "slides": []};
                 noteIndex++;
             }
-            time += chord.duration/2.0;
         }
+        time += chord.duration/2.0;
     }
     return notes;
 }

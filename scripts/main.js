@@ -91,9 +91,11 @@ function goto_previous_melody(){
 function set_melody_to_harmonize(melody){
     currentMelody = melody;
     load_midi_file("midi/"+melody.name+".mid");
-    load_melody_file("midi/"+melody.name+".musicxml")
+    load_melody_file("midi/"+melody.name+".musicxml");
+    var countdiv = document.getElementById("melodycount");
+    countdiv.innerHTML = "Melody "+(currentMelodyIndex+1)+" / "+melodiesDatabase.length;
     
-    var droparea = document.getElementById("droparea")
+    var droparea = document.getElementById("droparea");
     droparea.replaceChildren();
     droparea.style["padding-left"] = (80+10*Math.abs(melody.fifths))+"px";
     selectedChords = Array.from({length: melody.chordsDuration.length}, () => null);
@@ -130,6 +132,15 @@ function check_chords(){
     });
 }
 
+function export_keys(){
+    var overlay = document.getElementById("overlaykeys");
+    var elems = Array.from(overlay.getElementsByTagName("svg"));
+    elems.map(function(elem){
+        console.log(elem.innerHTML);
+    });
+
+}
+
 
 function update_chord_line() {
     var newdiv = document.createElement("div");
@@ -164,7 +175,10 @@ function update_chord_line() {
 
 function draw_circle_of_fifths(){
     var tools = document.getElementById("tools");
-    var height = Math.max(0.7*tools.clientHeight, 500);
+    var h = 0.75*tools.clientHeight;
+    var w = 0.6*tools.clientWidth;
+    var height = Math.max(Math.min(h, w), 600);
+    console.log(h, w, height);
     __svgScaleFactor = height/800;
     var area = document.getElementById("draggarea");
     var overlay = document.getElementById("overlaykeys");

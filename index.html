@@ -47,17 +47,35 @@
 
             </div>
 
-            <div class="buttonpanel">
+            <div class="leftpanel">
+                <div id="melodycount">
+                </div>
+
                 <p id="inst">
                 Clic in the circle to select a chord,<br>
                 then clic on the blue rectangles to place it.
                 </p>
-                <button id="playbtn" onclick="start_player();">Play</button>
-                <button id="stopbtn" onclick="stop_player();">Stop</button>
-                <button id="nextbtn" onclick="goto_next_melody();">Next</button>
-                <button id="prevbtn" onclick="goto_previous_melody();">Previous</button>
 
-                <button id="checkbtn" onclick="check_chords();">Check</button>
+                <div class="buttonpanel">
+                    <div class="centerbtn">
+                        <button id="playbtn" onclick="start_player();">Play</button>
+                    </div>
+                    <div class="centerbtn">
+                        <button id="stopbtn" onclick="stop_player();">Stop</button>
+                    </div>
+
+                    <div class="centerbtn">
+                        <button id="prevbtn" onclick="goto_previous_melody();">Previous</button>
+                    </div>
+
+                    <div class="centerbtn">
+                        <button id="nextbtn" onclick="goto_next_melody();">Next</button>
+                    </div>
+
+                    <div class="centerbtn">
+                        <button id="checkbtn" onclick="check_chords();">Check</button>
+                    </div>
+                </div>
             </div>
         </div>
 

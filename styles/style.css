@@ -19,7 +19,7 @@ body {
 }
 
 h1 {
-  font-size: 60px;
+  font-size: 50px;
   text-align: center;
   margin: 0;
   padding: 20px 0 0 0;
@@ -27,7 +27,7 @@ h1 {
 
 
 p {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.5;
   letter-spacing: 1px;
 }
@@ -40,7 +40,7 @@ button {
     text-align: center;
     font-size: 20px;
     padding: 5px;
-    width: 180px;
+    width: 120px;
     border-radius: 12px;
     cursor: pointer;
 
@@ -50,6 +50,7 @@ button {
     display: flex;
     flex-flow: column;
     height: 100vh;
+    width: 90%;
     margin: 0 auto;
     padding: 0 20px 0 20px;
 }
@@ -58,6 +59,7 @@ button {
 }
 
 .melodypanel {
+    margin-bottom: 1em;
 }
 
 #mainsheet {
@@ -117,14 +119,14 @@ button {
 #tools {
     flex-grow: 2;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
 
 #draggarea {
     /* position: relative; */
-    flex-grow: 1;
+    flex-grow: 0;
     flex-shrink: 0;
 }
 
@@ -162,38 +164,56 @@ button {
     fill: var(--selected-color);
 }
 
+.leftpanel {
+    flex-grow: 0;
+    flex-shrink: 2;
+    margin-left: 1.5em;
+}
+
+#melodycount {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2em;
+}
+
 .buttonpanel {
     display: grid;
-    flex-grow: 2;
-    flex-shrink: 2;
-    /* margin: 1.5em; */
+    grid-gap: 5px;
+    grid-template-columns: 50% 50%;
+}
+
+.centerbtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .buttonpanel button {
-    margin: 3px;
+    margin: 0;
 }
 
 #inst {
-    grid-row: 1;
-    grid-column-end: span 2;
+    text-align: justify;
 }
-#playbtn {
-    grid-row: 2;
-    grid-column: 1;
-}
-#stopbtn {
-    grid-row: 2;
-    grid-column: 2;
-}
-#nextbtn {
-    grid-row: 3;
-    grid-column: 2;
-}
-#prevbtn {
-    grid-row: 3;
-    grid-column: 1;
-}
-#checkbtn {
-    grid-row: 4;
-    grid-column: 1;
-}
+
+/* #playbtn { */
+/*     grid-row: 1; */
+/*     grid-column: 1; */
+/* } */
+/* #stopbtn { */
+/*     grid-row: 1; */
+/*     grid-column: 2; */
+/* } */
+/* #nextbtn { */
+/*     grid-row: 2; */
+/*     grid-column: 2; */
+/* } */
+/* #prevbtn { */
+/*     grid-row: 2; */
+/*     grid-column: 1; */
+/* } */
+/* #checkbtn { */
+/*     grid-row: 3; */
+/*     grid-column: 1; */
+/* } */
