@@ -304,7 +304,6 @@ function make_key_display(index, cx, cy, radius, alpha) {
 }
 
 window.addEventListener("resize", function(event){
-    draw_circle_of_fifths();
 });
 
 function make_drop_element(index, widthFactor) {
