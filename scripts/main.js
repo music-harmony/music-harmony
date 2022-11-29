@@ -90,8 +90,8 @@ function goto_previous_melody(){
 
 function set_melody_to_harmonize(melody){
     currentMelody = melody;
-    load_midi_file("midi/"+melody.name+".mid");
-    load_melody_file("midi/"+melody.name+".musicxml");
+    load_midi_file("../midi/"+melody.name+".mid");
+    load_melody_file("../midi/"+melody.name+".musicxml");
     var countdiv = document.getElementById("melodycount");
     countdiv.innerHTML = "Melody "+(currentMelodyIndex+1)+" / "+melodiesDatabase.length;
     

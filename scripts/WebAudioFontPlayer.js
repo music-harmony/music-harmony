@@ -485,7 +485,7 @@ var WebAudioFontLoader = /** @class */ (function () {
         var p = 1 * parseInt(key.substring(0, 3));
         return {
             variable: '_tone_' + key,
-            url: 'scripts/piano.js',
+            url: '../scripts/piano.js',
             title: this.instrumentTitles()[p],
             pitch: -1
         };
