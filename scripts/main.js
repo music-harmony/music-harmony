@@ -164,7 +164,7 @@ function update_chord_line() {
 
 function draw_circle_of_fifths(){
     var tools = document.getElementById("tools");
-    var height = 0.7*tools.clientHeight;
+    var height = Math.max(0.8*tools.clientHeight, 500);
     __svgScaleFactor = height/800;
     var area = document.getElementById("draggarea");
     var overlay = document.getElementById("overlaykeys");

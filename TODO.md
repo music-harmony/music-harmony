@@ -17,3 +17,8 @@
 4. Examples for instruction
 5. Automatically login
 6. Website
+
+## To finish on the website
+- allow multiple correct answers when checking
+- 2 versions (one without check button)
+- fix the size of the circle (maybe embed the svg for the key)

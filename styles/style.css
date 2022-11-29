@@ -173,23 +173,27 @@ button {
     margin: 3px;
 }
 
-#playbtn {
+#inst {
     grid-row: 1;
+    grid-column-end: span 2;
+}
+#playbtn {
+    grid-row: 2;
     grid-column: 1;
 }
 #stopbtn {
-    grid-row: 1;
-    grid-column: 2;
-}
-#nextbtn {
     grid-row: 2;
     grid-column: 2;
 }
-#playbtn {
-    grid-row: 1;
+#nextbtn {
+    grid-row: 3;
+    grid-column: 2;
+}
+#prevbtn {
+    grid-row: 3;
     grid-column: 1;
 }
 #checkbtn {
-    grid-row: 3;
+    grid-row: 4;
     grid-column: 1;
 }
