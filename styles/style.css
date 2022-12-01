@@ -1,10 +1,10 @@
 :root {
-    --wrong-chord: #ee3300;
-    --right-chord: #33ee00;
-    --drop-color: #bbd2ee;
-    --contrast-grey: #222222;
-    --hover-color: #33bbee;
-    --selected-color: #2299dd;
+    --wrong-chord: #f64157;
+    --right-chord: #2eb737;
+    --drop-color: #6d81d8;
+    --contrast-grey: #2a2019;
+    --hover-color: #71d2e9;
+    --selected-color: #6d81d8;
 }
 
 html {
