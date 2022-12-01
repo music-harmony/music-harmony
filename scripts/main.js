@@ -450,11 +450,11 @@ function make_musicxml_chord(chord) {
           accidental = tagwrap("accidental", acctype);
       }
       if (i === 0){
-        var chord = ""
+        var chordtag = ""
       } else {
-        var chord = "<chord/>"
+        var chordtag = "<chord/>"
       }
-      var res = tagwrap("note", chord+pitch+duration+accidental);
+      var res = tagwrap("note", chordtag+pitch+duration+accidental);
       code += res;
   }
   return code;
