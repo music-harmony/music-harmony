@@ -163,7 +163,8 @@ function update_chord_line() {
         return {notes: chord_notes, 
                 duration: currentMelody.chordsDuration[i]};
     });
-    var xmlcode = make_musicxml_chord_line(chords, currentMelody.fifths);
+    var xmlcode = make_musicxml_chord_line(chords, currentMelody.fifths,
+                                           currentMelody.beats, currentMelody.beat_type);
     var doc = make_musicxml_doc([loadedMelody, xmlcode]);
     osmd.load(doc).then(
         function() {
@@ -298,7 +299,7 @@ function make_key_display(index, cx, cy, radius, alpha) {
       drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
     var fifths = tonalityFifths[index];
-    var measurexml = make_musicxml_chord_line([{notes: null, duration: 4}], fifths);
+    var measurexml = make_musicxml_chord_line([{notes: null, duration: 8}], fifths, 4, 4);
     var xmlcode = make_musicxml_doc([measurexml], 0);
     osmd.load(xmlcode).then(
         function() {
@@ -361,10 +362,10 @@ var footer = `
     return header+partlist+xmlparts+footer;
 }
 
-function make_measure_attributes(fifths){
-    var div = tagwrap("divisions", 1);
+function make_measure_attributes(fifths, beats, beat_type){
+    var div = tagwrap("divisions", 2);
     var key = tagwrap("key", tagwrap("fifths", fifths));
-    var time = tagwrap("time", tagwrap("beats", "4")+tagwrap("beat-type", "4"));
+    var time = tagwrap("time", tagwrap("beats", beats)+tagwrap("beat-type", beat_type));
     var clef = tagwrap("clef", tagwrap("sign", "G")+tagwrap("line", "2"));
     return tagwrap("attributes", div+key+time+clef);
 }
@@ -372,24 +373,16 @@ function make_measure_attributes(fifths){
 
 function make_rest_measure(fifths, duration){
     var rest = '<rest/>';
-      if (duration == 4){
-          var dur = tagwrap("duration", "4");
-          var type = tagwrap("type", "whole");
-      } else if (duration == 2){
-          var dur = tagwrap("duration", "2");
-          var type = tagwrap("type", "half");
-      } else if (duration == 1){
-          var dur = tagwrap("duration", "1");
-          var type = tagwrap("type", "quarter");
-      }
-    var note = tagwrap('note', rest+dur+type);
+    var dur = get_duration(duration);
+    var note = tagwrap('note', rest+dur);
     return note;
 }
 
-function make_musicxml_chord_line(chords, fifths) {
+function make_musicxml_chord_line(chords, fifths, beats, beat_type) {
     var code = "";
     var measure = "";
     var length = 0;
+    var measure_length = 8*beats/beat_type;
     for(let i = 0; i < chords.length; i++){
         var chord = chords[i];
         if (chord.notes === null){
@@ -400,15 +393,33 @@ function make_musicxml_chord_line(chords, fifths) {
             length += chord.duration;
         }
         if (i === 0){
-            measure = make_measure_attributes(fifths) + measure;
+            measure = make_measure_attributes(fifths, beats, beat_type) + measure;
         }
-        if (length >= 4){
+        if (length >= measure_length){
             code += tagwrapattr('measure number="'+(i+1)+'"', 'measure', measure);
             measure = "";
             length = 0;
         }
     }
     return code;
+}
+
+function get_duration(duration){
+  var dur = tagwrap("duration", duration);
+  if (duration == 8){
+      var type = tagwrap("type", "whole");
+  }  else if (duration == 6){
+      var type = tagwrap("type", "half")+"<dot/>";
+  }else if (duration == 4){
+      var type = tagwrap("type", "half");
+  } else if (duration == 3){
+      var type = tagwrap("type", "quarter")+"<dot/>";
+  } else if (duration == 2){
+      var type = tagwrap("type", "quarter");
+  } else if (duration == 1){
+      var type = tagwrap("type", "eighth");
+  }
+  return dur+type;
 }
 
 function make_musicxml_chord(chord) {
@@ -428,16 +439,7 @@ function make_musicxml_chord(chord) {
           alter = tagwrap("alter", alter);
       }
       var pitch = tagwrap("pitch", step+octave+alter);
-      if (chord.duration == 4){
-          var dur = tagwrap("duration", "4");
-          var type = tagwrap("type", "whole");
-      } else if (chord.duration == 2){
-          var dur = tagwrap("duration", "2");
-          var type = tagwrap("type", "half");
-      } else if (chord.duration == 1){
-          var dur = tagwrap("duration", "1");
-          var type = tagwrap("type", "quarter");
-      }
+      var duration = get_duration(chord.duration);
       var accidental = '';
       if (note.length > 2){
           if (note[2] == '#'){
@@ -452,7 +454,7 @@ function make_musicxml_chord(chord) {
       } else {
         var chord = "<chord/>"
       }
-      var res = tagwrap("note", chord+pitch+dur+type+accidental);
+      var res = tagwrap("note", chord+pitch+duration+accidental);
       code += res;
   }
   return code;
