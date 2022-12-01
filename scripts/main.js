@@ -100,7 +100,11 @@ function set_melody_to_harmonize(melody){
     droparea.style["padding-left"] = (80+10*Math.abs(melody.fifths))+"px";
     selectedChords = Array.from({length: melody.chordsDuration.length}, () => null);
     for (i = 0; i < melody.chordsDuration.length; i++){
-        make_drop_element(i, melody.chordsDuration[i]);
+        var deaddrop = false;
+        if (melody.expectedChords[i].length === 0){
+            var deaddrop = true;
+        }
+        make_drop_element(i, melody.chordsDuration[i], deaddrop);
     }
 }
 
@@ -321,13 +325,17 @@ function make_key_display(index, cx, cy, radius, alpha) {
 window.addEventListener("resize", function(event){
 });
 
-function make_drop_element(index, widthFactor) {
+function make_drop_element(index, widthFactor, deaddrop) {
     var drop_div = document.createElement("div");
     drop_div.setAttribute("dropindex", index);
     drop_div.id = "drop"+index;
     drop_div.className = "chorddrop";
     drop_div.style['width'] = (50*widthFactor)+"%";
-    drop_div.addEventListener("click", drop_chord_handler);
+    if (deaddrop){
+        drop_div.classList.add("deaddrop")
+    } else {
+        drop_div.addEventListener("click", drop_chord_handler);
+    }
     var droparea = document.getElementById("droparea")
     droparea.appendChild(drop_div);
 }
