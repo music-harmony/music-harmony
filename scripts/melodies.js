@@ -20,7 +20,7 @@ var melodiesDatabase = [
         fifths: -3,
         beats: 4,
         beat_type: 4,
-        chordsDuration: [4, 4, 8, 4, 8, 4, 4, 4, 4, 4],
+        chordsDuration: [4, 4, 4, 8, 8, 4, 4, 4, 4, 4],
         expectedChords: [[],[8,9,21],[9,10,22],[8,20,21],[9,10,22],[9,10,22],[8,9,21],[8,20,21],[8,20],[9]]
     },
     {
