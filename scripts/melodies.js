@@ -15,7 +15,7 @@ var melodiesDatabase = [
         chordsDuration: [4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 4],
         expectedChords: [[],[2,3,15],[2,3,15],[3,4,16],[2,3,15],[3,4,16],[4,16],[3,4,16],[2,14],[4,14],[3]]
     },
-    {
+    { 
         name: 'Melody03',
         fifths: -3,
         beats: 4,
@@ -52,7 +52,7 @@ var melodiesDatabase = [
         fifths: -5,
         beats: 4,
         beat_type: 4,
-        chordsDuration: [6, 2, 8, 8, 8, 4, 4, 6],
+        chordsDuration: [6, 2, 8, 8, 8, 4, 4, 8],
         expectedChords: [[],[7,19,20],[6,18,19],[7,19,20],[6,18,19],[7,19,20],[8,18],[7]]
     },
     {
